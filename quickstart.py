@@ -1,9 +1,9 @@
 #!/usr/bin/python
 """
-This is a piece of example code pulled from
-https://developers.google.com/gmail/api/quickstart/quickstart-python
-
-It is copyright by Google under the Apache 2.0 License.
+All functions labeled as 'example code' are copyright
+by Google under the Apache 2.0 license. The docstrings
+for those functions cite the specific sources for
+those code samples.
 """
 import httplib2
 
@@ -18,7 +18,8 @@ def auth():
     """
     Return an authenticated Gmail service.
 
-    Based on example code from Google's website.
+    Based on example code from
+    https://developers.google.com/gmail/api/quickstart/quickstart-python
     """
     # Path to the client_secret.json file downloaded from the Developer Console
     CLIENT_SECRET_FILE = 'client_secret.json'
@@ -45,6 +46,8 @@ def auth():
 def get_threads(gmail_service):
     """
     Takes an authenticated Gmail service and returns a list of email thread IDs.
+
+    Based on example code from Google's website.
     """
     # Retrieve a page of threads
     threads = gmail_service.users().threads().list(userId='me').execute()
@@ -65,6 +68,9 @@ def list_labels(service, user_id):
 
     Returns:
         A list all Labels in the user's mailbox.
+
+    Based on example code from
+    https://developers.google.com/gmail/api/v1/reference/users/labels/list
     """
     try:
         response = service.users().labels().list(userId=user_id).execute()
@@ -88,6 +94,9 @@ def list_messages_with_label(service, user_id, label_ids=[]):
         List of Messages that have all required Labels applied. Note that the
         returned list contains Message IDs, you must use get with the
         appropriate id to get the details of a Message.
+
+    Based on example code from
+    https://developers.google.com/gmail/api/v1/reference/users/messages/list
     """
     try:
         response = service.users().messages().list(userId=user_id,
@@ -106,10 +115,26 @@ def list_messages_with_label(service, user_id, label_ids=[]):
     except errors.HttpError, error:
         print 'An error occurred: %s' % error
 
+
+def find_label_id_from_name(service, user, label_name):
+    """
+    Given an authenticated Gmail service, user, and a label name
+    (visible in Gmail), find the internal label ID.
+
+    This function returns False if the given label name was
+    not found.
+    """
+    labels = list_labels(service, user)
+    for label in labels:
+        if label['name'] == label_name:
+            return label['id']
+    else:
+        return False
+
 def main():
     gmail_service = auth()
-    print list_labels(gmail_service, "me")
+    #print list_labels(gmail_service, "me")
     #print list_messages_with_label(auth(), "me", "SENT")
-
+    print find_label_id_from_name(gmail_service, "me", "College Apps")
 if __name__ == "__main__":
     main()
