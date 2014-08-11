@@ -116,7 +116,30 @@ def list_messages_with_label(service, user_id, label_ids=[]):
         print 'An error occurred: %s' % error
 
 
-def find_label_id_from_name(service, user, label_name):
+def get_message_from_id(service, user_id, msg_id):
+    """Get a Message with given ID.
+
+    Args:
+        service: Authorized Gmail API service instance.
+        user_id: User's email address. The special value "me"
+        can be used to indicate the authenticated user.
+        msg_id: The ID of the Message required.
+
+    Returns:
+        A Message.
+
+    Based on example code from
+    https://developers.google.com/gmail/api/v1/reference/users/messages/get
+    """
+    try:
+        message = service.users().messages().get(
+            userId=user_id, id=msg_id).execute()
+        return message
+    except errors.HttpError, error:
+        print 'An error occurred: %s' % error
+
+
+def get_label_id_from_name(service, user, label_name):
     """
     Given an authenticated Gmail service, user, and a label name
     (visible in Gmail), find the internal label ID.
@@ -135,6 +158,9 @@ def main():
     gmail_service = auth()
     #print list_labels(gmail_service, "me")
     #print list_messages_with_label(auth(), "me", "SENT")
-    print find_label_id_from_name(gmail_service, "me", "College Apps")
+    label = get_label_id_from_name(gmail_service, "me", "College Apps")
+    messages = list_messages_with_label(gmail_service, "me", [label])
+    print get_message_from_id(gmail_service, "me", messages[0]['id'])
+
 if __name__ == "__main__":
     main()
