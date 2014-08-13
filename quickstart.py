@@ -249,7 +249,12 @@ def main():
             continue
         subject = mime_msg.get("Subject")
         sender_domain = mime_msg.get("From").split("@")[1].split(">")[0]
-        csv_line = [sender_domain, subject, text]
+        # Strip whitespace
+        csv_line = [text.strip() for text in [sender_domain, subject, text]]
+        # If any of our strings are empty, replace with a placeholder
+        # to make sure each CSV line has three items.
+        csv_line = map(lambda s: (u'' == s) and u"PLACEHOLDERNONE" or s ,
+                       csv_line)
         with open(OUTPUT_CSV_FILE, 'a') as handle:
             writer = unicodecsv.writer(handle)
             writer.writerow(csv_line)
