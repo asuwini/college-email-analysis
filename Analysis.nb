@@ -1,0 +1,333 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     13318,        324]
+NotebookOptionsPosition[     12924,        307]
+NotebookOutlinePosition[     13257,        322]
+CellTagsIndexPosition[     13214,        319]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+     "The", " ", "CSV", " ", "file", " ", "is", " ", "in", " ", "the", " ", 
+      "format", " ", "of"}], " ", "<", 
+     RowBox[{"email", " ", "domain", " ", "name"}], ">"}], ",", 
+    RowBox[{"<", 
+     RowBox[{"email", " ", "subject"}], ">"}], ",", 
+    RowBox[{"<", 
+     RowBox[{"email", " ", "body"}], ">"}]}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"data", " ", "=", " ", 
+     RowBox[{"Import", "[", 
+      RowBox[{"StringJoin", "[", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+        "\"\<output29.csv\>\""}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{"stopwords", " ", "=", " ", 
+      RowBox[{"WordData", "[", 
+       RowBox[{"All", ",", "\"\<Stopwords\>\""}], "]"}]}], ";"}], " ", "*)"}],
+    "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "Remember", " ", "to", " ", "filter", " ", "out", " ", "stopwords", " ", 
+     "from", " ", "the", " ", "email", " ", "body"}], " ", 
+    "*)"}]}]}]], "Input",
+ CellChangeTimes->{{3.6170206163893414`*^9, 3.617020635054002*^9}, {
+   3.6170208351693373`*^9, 3.617020853397148*^9}, {3.617020984101287*^9, 
+   3.617020985356453*^9}, {3.6170210329660387`*^9, 3.617021066745266*^9}, {
+   3.617021115871961*^9, 3.617021120425798*^9}, {3.617021155858293*^9, 
+   3.617021184845998*^9}, {3.617021280403845*^9, 3.617021314083859*^9}, {
+   3.6170214708291683`*^9, 3.617021472483704*^9}, {3.617021894002232*^9, 
+   3.617021908979624*^9}, {3.617023006915306*^9, 3.617023007026043*^9}, {
+   3.617028558706472*^9, 3.617028559067419*^9}, 3.617028596641*^9, {
+   3.617031617637168*^9, 3.6170316181628923`*^9}, {3.617032198556879*^9, 
+   3.6170322088115807`*^9}, {3.617033559210121*^9, 3.6170335593894987`*^9}, {
+   3.6170544113014917`*^9, 3.617054429202176*^9}, {3.617054734474482*^9, 
+   3.6170547515483313`*^9}, {3.617055293309067*^9, 3.6170553154529743`*^9}, {
+   3.61705542214156*^9, 3.617055467663857*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"'", 
+     RowBox[{"body", "'"}]}], ",", " ", 
+    RowBox[{"'", 
+     RowBox[{"subjects", "'"}]}], ",", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"and", " ", "'"}], 
+      RowBox[{"universities", "'"}], " ", "are", " ", "all", " ", "word"}], 
+     "\[Rule]", 
+     RowBox[{
+     "frequency", " ", "Associations", " ", "that", " ", "are", " ", "sorted",
+       " ", "from", " ", "the", " ", "most", " ", "frequently", " ", 
+      "occuring", " ", "words", " ", "to", " ", "the", " ", "least", " ", 
+      "frequently", " ", 
+      RowBox[{"occurring", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"The", " ", "email", " ", "body"}], ";", " ", "specifically"}], 
+    ",", " ", 
+    RowBox[{
+     RowBox[{
+     "all", " ", "of", " ", "the", " ", "concatenated", " ", "text", " ", 
+      "from", " ", "the", " ", "MIME", " ", "multipart", " ", "tree", " ", 
+      "within", " ", "the", " ", "email", " ", "as", " ", "a", " ", "word"}], 
+     "\[Rule]", 
+     RowBox[{"frequency", " ", 
+      RowBox[{"Association", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  
+  RowBox[{
+   RowBox[{
+    RowBox[{"body", " ", "=", " ", 
+     RowBox[{"Sort", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Merge", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Table", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Counts", "[", "\[IndentingNewLine]", 
+            RowBox[{"StringSplit", "[", "\[IndentingNewLine]", 
+             RowBox[{"ToLowerCase", "[", 
+              RowBox[{
+               RowBox[{"data", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "[", 
+               RowBox[{"[", "3", "]"}], "]"}], "\[IndentingNewLine]", "]"}], 
+             "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "]"}], ",", 
+           " ", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", " ", 
+             RowBox[{"Length", "[", "data", "]"}]}], "}"}]}], "]"}], ",", " ",
+          "Total"}], "]"}], ",", " ", "Greater"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "All", " ", "of", " ", "the", " ", "Subject", " ", "lines", " ", "from", 
+      " ", "these", " ", "emails"}], ",", " ", 
+     RowBox[{
+      RowBox[{"as", " ", "a", " ", "word"}], "\[Rule]", 
+      RowBox[{"frequency", " ", 
+       RowBox[{"Association", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"subjects", " ", "=", "  ", 
+     RowBox[{"Sort", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Merge", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Table", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Counts", "[", "\[IndentingNewLine]", 
+            RowBox[{"StringSplit", "[", "\[IndentingNewLine]", 
+             RowBox[{"ToLowerCase", "[", 
+              RowBox[{
+               RowBox[{"data", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "\[IndentingNewLine]", "]"}], 
+             "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "]"}], ",", 
+           " ", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", " ", 
+             RowBox[{"Length", "[", "data", "]"}]}], "}"}]}], "]"}], ",", " ",
+          "Total"}], "]"}], ",", " ", "Greater"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+     RowBox[{
+     "The", " ", "domain", " ", "names", " ", "for", " ", "the", " ", 
+      "universities", " ", "sending", " ", "the", " ", "emails"}], ",", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"as", " ", "a", " ", "domain"}], "-", "name"}], "\[Rule]", 
+      RowBox[{"frequency", " ", 
+       RowBox[{"Association", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]",
+    " ", 
+   RowBox[{
+    RowBox[{"universities", " ", "=", " ", 
+     RowBox[{"Sort", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Merge", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Table", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Counts", "[", "\[IndentingNewLine]", 
+            RowBox[{"StringSplit", "[", "\[IndentingNewLine]", 
+             RowBox[{"ToLowerCase", "[", 
+              RowBox[{
+               RowBox[{"data", "[", 
+                RowBox[{"[", "i", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "\[IndentingNewLine]", "]"}], 
+             "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", "]"}], ",", 
+           " ", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", " ", 
+             RowBox[{"Length", "[", "data", "]"}]}], "}"}]}], "]"}], ",", " ",
+          "Total"}], "]"}], ",", " ", "Greater"}], "]"}]}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.617021643170817*^9, 3.617021741871518*^9}, {
+  3.61702178662309*^9, 3.617021801854513*^9}, {3.6170218804990892`*^9, 
+  3.6170218827589407`*^9}, {3.617028577129141*^9, 3.617028583925817*^9}, {
+  3.6170336939915237`*^9, 3.617033719916339*^9}, {3.617034115125662*^9, 
+  3.6170341187203493`*^9}, {3.6170342803368883`*^9, 3.617034304084724*^9}, {
+  3.617034526073683*^9, 3.6170345273187323`*^9}, {3.617034680743307*^9, 
+  3.6170347106752768`*^9}, {3.617035488186173*^9, 3.617035508546763*^9}, {
+  3.617035583407621*^9, 3.617035602928294*^9}, {3.6170552338059483`*^9, 
+  3.617055282891021*^9}, {3.617055317165309*^9, 3.6170554157645187`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "This", " ", "hacky", " ", "function", " ", "transforms", " ", "an", " ", 
+     "Association", " ", "into", " ", "a", " ", "list", " ", "with", " ", 
+     RowBox[{"{", 
+      RowBox[{"key", ",", " ", "value"}], "}"}], " ", 
+     RowBox[{"sublists", ".", " ", "I"}], " ", 
+     RowBox[{"don", "'"}], "t", " ", "know", " ", "if", " ", "this", " ", 
+     "is", " ", "the", " ", "best", " ", "way", " ", "to", " ", "accomplish", 
+     " ", "the", " ", "given", " ", "task"}], ",", " ", 
+    RowBox[{
+    "but", " ", "it", " ", "seems", " ", "like", " ", "the", " ", "ways", " ",
+      "to", " ", "display", " ", "Associations", " ", "are", " ", "fairly", 
+     " ", "inflexible", " ", "in", " ", "Mathematica", " ", "10", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"unless", " ", 
+        RowBox[{"I", "'"}], "m", " ", "missing", " ", "something"}], ")"}], 
+      ".", " ", "This"}], " ", "is", " ", "actually", " ", "the", " ", 
+     "first", " ", "thing", " ", 
+     RowBox[{"I", "'"}], "ve", " ", "written", " ", "in", " ", "Mathematica", 
+     " ", "10"}], ",", " ", 
+    RowBox[{"so", " ", "that", " ", "is", " ", "entirely", " ", 
+     RowBox[{"possible", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"assocToList", "[", "assoc_", "]"}], " ", ":=", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"d", " ", "=", " ", 
+       RowBox[{"Dataset", "[", "assoc", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"k", " ", "=", " ", 
+       RowBox[{"Keys", "[", "d", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"v", " ", "=", " ", 
+       RowBox[{"Values", "[", "d", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"len", " ", "=", " ", 
+       RowBox[{"Length", "[", "d", "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"k", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+          RowBox[{"v", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", " ", "len"}], "}"}]}], "]"}]}], ")"}]}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.61703822294345*^9, 3.617038292423444*^9}, {
+   3.617054299875987*^9, 3.617054364731011*^9}, {3.617054803632637*^9, 
+   3.617054815453261*^9}, 3.617054905320602*^9, {3.617055057837596*^9, 
+   3.617055149337426*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "These", " ", "are", " ", "all", " ", "of", " ", "the", " ", "eamil", " ",
+      "domain", " ", "names", " ", "that", " ", "have", " ", "sent", " ", 
+     "me", " ", "emails"}], ",", " ", 
+    RowBox[{
+    "sorted", " ", "from", " ", "the", " ", "greatest", " ", "number", " ", 
+     "of", " ", "emails", " ", "sent", " ", "to", " ", "the", " ", "fewest", 
+     " ", "number", " ", "of", " ", "emails", " ", 
+     RowBox[{"sent", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"assocToList", "[", "universities", "]"}], " ", "//", " ", 
+    "Grid"}], " ", "//", " ", "Text"}]}]], "Input",
+ CellChangeTimes->{{3.6170382943384657`*^9, 3.6170382950438347`*^9}, {
+  3.617054366363673*^9, 3.617054384334186*^9}, {3.6170545340613728`*^9, 
+  3.6170545633192167`*^9}, {3.617055160961396*^9, 3.617055177241274*^9}, {
+  3.6170552155872307`*^9, 3.617055226836862*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+     "This", " ", "is", " ", "a", " ", "table", " ", "of", " ", "the", " ", 
+      "50", " ", "most", " ", "frequent", " ", "words", " ", "in", " ", "all",
+       " ", "3000"}], "+", " ", 
+     RowBox[{"emails", " ", "in", " ", "the", " ", "CSV", " ", 
+      RowBox[{"file", ".", "\[IndentingNewLine]", 
+       RowBox[{"TODO", ":", "\[IndentingNewLine]", "  ", 
+        RowBox[{
+         RowBox[{"-", " ", "Remove"}], " ", "stopwords", " ", "and", " ", 
+         "punctuation", " ", "from", " ", "the", " ", 
+         RowBox[{"list", ".", "\[IndentingNewLine]", 
+          RowBox[{"-", " ", "Better"}]}], " ", "formatting"}]}]}]}]}], ";", 
+    " ", 
+    RowBox[{
+    "ideally", " ", "with", " ", "the", " ", "quality", " ", "of", " ", "a", 
+     " ", "professional", " ", 
+     RowBox[{"report", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"assocToList", "[", 
+     RowBox[{"Take", "[", 
+      RowBox[{"body", ",", " ", "50"}], "]"}], "]"}], " ", "//", " ", 
+    "Grid"}], " ", "//", " ", "Text"}]}]], "Input",
+ CellChangeTimes->{{3.617054567441025*^9, 3.617054582032466*^9}, {
+  3.6170547868828917`*^9, 3.617054802641081*^9}, {3.617054907698257*^9, 
+  3.61705493745335*^9}, {3.6170549776185713`*^9, 3.617055052733594*^9}}]
+},
+WindowSize->{1301, 744},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (June 27, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 2062, 45, 99, "Input"],
+Cell[2623, 67, 5495, 128, 759, "Input"],
+Cell[8121, 197, 2478, 54, 253, "Input"],
+Cell[10602, 253, 968, 20, 77, "Input"],
+Cell[11573, 275, 1347, 30, 121, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
